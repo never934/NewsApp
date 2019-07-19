@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">News</string>
+    <string name="api_key">27d1abc5d9c94d23b4ef18ea475dd108</string>
+    <string name="error_downloading">Произошла ошибка во время получения новостей, проверьте подключение к сети</string>
+</resources>
