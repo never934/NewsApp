@@ -38,6 +38,24 @@ class NewsAdapter(private val news : ArrayList<News>, private val context : Cont
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsHolder {
         val v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item_news, parent, false)
         val vh = NewsHolder(v)
+        vh.itemView.setOnTouchListener(object : OnSwipeTouchListener() {
+            override fun onClick() {
+                super.onClick()
+                val uri = Uri.parse(news.get(vh.adapterPosition).clickUrl)
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                context.startActivity(intent)
+            }
+
+            override fun onSwipeLeft() {
+                setAnimation(vh.itemView, vh.adapterPosition, STATE_SWIPED_LEFT)
+                deleteItem(vh.adapterPosition, vh)
+            }
+
+            override fun onSwipeRight() {
+                setAnimation(vh.itemView, vh.adapterPosition, STATE_SWIPED_RIGHT)
+                deleteItem(vh.adapterPosition, vh)
+            }
+        })
         return vh
     }
 
@@ -52,25 +70,6 @@ class NewsAdapter(private val news : ArrayList<News>, private val context : Cont
 
         holder.itemView.Title.setText(news.get(position).title)
         setAnimation(holder.itemView, position, STATE_CREATED)
-
-        holder.itemView.container.setOnTouchListener(object : OnSwipeTouchListener() {
-            override fun onClick() {
-                super.onClick()
-                val uri = Uri.parse(news.get(position).clickUrl)
-                val intent = Intent(Intent.ACTION_VIEW, uri)
-                context.startActivity(intent)
-            }
-
-            override fun onSwipeLeft() {
-                setAnimation(holder.itemView.card, position, STATE_SWIPED_LEFT)
-                deleteItem(position, holder)
-            }
-
-            override fun onSwipeRight() {
-                setAnimation(holder.itemView.card, position, STATE_SWIPED_RIGHT)
-                deleteItem(position, holder)
-            }
-        })
     }
 
     private fun setAnimation(viewToAnimate: View, position: Int, state: Int) {
